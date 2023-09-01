@@ -29,30 +29,15 @@
                     <div v-for="(item, index) in orderTitle" :key="index" :class="item.class">
                         <p class="list-title">{{item.title}}</p>
                     </div>
-
-                    <!-- <p class="list-title">訂單</p>
-                    </div>
-                    <div class="total">
-                        <p class="list-title">總金額</p>
-                    </div>
-                    <div class="people">
-                        <p class="list-title">人數</p>
-                    </div>
-                    <div class="date">
-                        <p class="list-title">預約日期</p>
-                    </div>
-                    <div class="delete">
-                        <p class="list-title">刪除</p>
-                    </div> -->
                 </div>
                 <hr>
-                <div v-for="(item) in shoppingCartProducts" :key="item.id" class="form-group">
+                <div v-for="(item) in cartComm" :key="item.id" class="form-group">
                     <div class="order">
                         <img :src="item.imgSrc" :alt="item.name" />
                         <div>
                             <p class="infor">
-                                訂單編號:<span class="no">{{item.no}}</span><br>
-                                訂單名稱:<span class="name">{{item.name}}</span><br>
+                                訂單編號:<span>{{item.number}}</span><br>
+                                訂單名稱:<span>{{item.name}}</span><br>
                                 <span class="paid-way">線上刷卡</span>
                             </p>
                         </div>
@@ -61,17 +46,17 @@
                         <p class="infor">
                             單價:$<span class="u-p">{{item.price}}</span>
                         </p>
-                        <p class="infor">總計:<span class="sum"> {{calculatePrice(item.price,
+                        <p class="infor">總計:<span class="sum"> {{total(item.price,
                                 item.quantity)}}</span></span>
                         </p>
                     </div>
                     <div class="people">
                         <form id='myform' method='POST' action='#'>
                             <input type='button' value='-' class='qtyminus' field='quantity'
-                            @click="updateQuantityOfProduct(item, 'decrease')">
+                                @click="updateQuantity(item, 'minus')">
                             <input type='text' name='quantity' :value="item.quantity" class='qty'>
                             <input type='button' value='+' class='qtyplus' field='quantity'
-                            @click="updateQuantityOfProduct(item, 'increase')">
+                                @click="updateQuantity(item, 'plus')">
                         </form>
                     </div>
                     <div class="date">
@@ -79,18 +64,16 @@
                             14:30</p>
                     </div>
                     <div class="delete">
-                        <button class="delete-button"
-                        @click="deleteProduct(item.id)">
-                        <i class="fa-regular fa-trash-can"
-                                style="color: black;"></i></button>
-                                
+                        <button class="delete-button" @click="deleteComm(item.id)">
+                            <i class="fa-regular fa-trash-can" style="color: black;"></i></button>
+
                     </div>
                 </div>
                 <hr>
 
                 <div class="amount-group">
-                    <div class="amount">總金額：<span>$ {{ shoppingCartProductsSum }}</span></div>
-                    <div class="amount">總品項：<span class="cart_products_total">{{ shoppingCartItemsCount}}</span></div>
+                    <div class="amount">總金額：<span>$ {{cartCommSum}}</span></div>
+                    <div class="amount">總品項：<span class="cart_products_total">{{cartItemsCount}}</span></div>
                     <a class="buy" href="">再去逛逛</a>
                     <a class="buy" href="">我要買單</a>
                 </div>
@@ -124,35 +107,35 @@
                             class: "delete",
                         },
                     ],
-                    shoppingCartData: [
+                    cartData: [
                         {
-                            id: "111",
+                            id: "1",
                             imgSrc: "animal-play01.jpg",
-                            no: "123456",
+                            number: "123456",
                             name: "水獺餵食",
                             price: 150,
                             quantity: 1,
                         },
                         {
-                            id: "222",
+                            id: "2",
                             imgSrc: "animal-play02.jpg",
-                            no: "123457",
+                            number: "123457",
                             name: "水豚餵食",
                             price: 50,
                             quantity: 2,
                         },
                         {
-                            id: "333",
+                            id: "3",
                             imgSrc: "animal-play04.jpg",
-                            no: "123458",
+                            number: "123458",
                             name: "狐蒙互動",
                             price: 80,
                             quantity: 3,
                         },
                         {
-                            id: "444",
+                            id: "4",
                             imgSrc: "animal-play06.jpg",
-                            no: "123459",
+                            number: "123459",
                             name: "笑笑羊餵食",
                             price: 30,
                             quantity: 1,
@@ -162,45 +145,37 @@
             },
 
             computed: {
-                shoppingCartProducts() {
-                    return [...this.shoppingCartData];
+                cartComm() {
+                    return [...this.cartData];
                 },
-
-                shoppingCartItemsCount() {
-                    return this.shoppingCartProducts.length;
+                cartItemsCount() {
+                    return this.cartComm.length;
                 },
-
-                shoppingCartProductsSum() {
+                cartCommSum() {
                     return (
-                        this.shoppingCartProducts.reduce(
-                            (acc, product) => acc + product.price * product.quantity,0
+                        this.cartComm.reduce(
+                            (acc, product) => acc + product.price * product.quantity, 0
                         )
                     );
                 },
             },
 
             methods: {
-                updateQuantityOfProduct(item, feature) {
-                    // const item = this.shoppingCartData.find((item) => item.id === id);
-
-                    if (item.quantity === 1 && feature === "decrease") return;
-                    feature === "increase" ? item.quantity++ : item.quantity--;
+                updateQuantity(item, feature) {
+                    if (item.quantity === 1 && feature === "minus") return;
+                    feature === "plus" ? item.quantity++ : item.quantity--;
                 },
-
-                deleteProduct(id) {
-                    const itemIndex = this.shoppingCartData.findIndex(
+                deleteComm(id) {
+                    const itemIndex = this.cartData.findIndex(
                         (item) => item.id === id
                     );
-
-                    this.shoppingCartData.splice(itemIndex, 1);
+                    this.cartData.splice(itemIndex, 1);
                 },
-
-                calculatePrice(price, quantity) {
+                total(price, quantity) {
                     return Math.floor(price * quantity * 10) / 10;
                 },
             },
-        });
-        app.mount("#app");
+        }).mount("#app");
     </script>
 
 </body>
