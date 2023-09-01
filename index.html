@@ -67,9 +67,11 @@
                     </div>
                     <div class="people">
                         <form id='myform' method='POST' action='#'>
-                            <input type='button' value='-' class='qtyminus' field='quantity'>
+                            <input type='button' value='-' class='qtyminus' field='quantity'
+                            @click="updateQuantityOfProduct(item, 'decrease')">
                             <input type='text' name='quantity' :value="item.quantity" class='qty'>
-                            <input type='button' value='+' class='qtyplus' field='quantity'>
+                            <input type='button' value='+' class='qtyplus' field='quantity'
+                            @click="updateQuantityOfProduct(item, 'decrease')">
                         </form>
                     </div>
                     <div class="date">
@@ -85,6 +87,7 @@
 
                 <div class="amount-group">
                     <div class="amount">總金額：<span>$ {{ shoppingCartProductsSum }}</span></div>
+                    <div class="amount">總品項：<span class="cart_products_total">{{ shoppingCartItemsCount}}</span></div>
                     <a class="buy" href="">再去逛逛</a>
                     <a class="buy" href="">我要買單</a>
                 </div>
@@ -166,12 +169,9 @@
 
                 shoppingCartProductsSum() {
                     return (
-                        Math.floor(
-                            this.shoppingCartProducts.reduce(
-                                (acc, product) => acc + product.price * product.quantity,
-                                0
-                            ) * 10
-                        ) / 10
+                        this.shoppingCartProducts.reduce(
+                            (acc, product) => acc + product.price * product.quantity,0
+                        )
                     );
                 },
             },
