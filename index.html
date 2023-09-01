@@ -71,7 +71,7 @@
                             @click="updateQuantityOfProduct(item, 'decrease')">
                             <input type='text' name='quantity' :value="item.quantity" class='qty'>
                             <input type='button' value='+' class='qtyplus' field='quantity'
-                            @click="updateQuantityOfProduct(item, 'decrease')">
+                            @click="updateQuantityOfProduct(item, 'increase')">
                         </form>
                     </div>
                     <div class="date">
@@ -79,8 +79,11 @@
                             14:30</p>
                     </div>
                     <div class="delete">
-                        <button class="delete-button"><i class="fa-regular fa-trash-can"
+                        <button class="delete-button"
+                        @click="deleteProduct(item.id)">
+                        <i class="fa-regular fa-trash-can"
                                 style="color: black;"></i></button>
+                                
                     </div>
                 </div>
                 <hr>
